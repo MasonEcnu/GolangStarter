@@ -9,39 +9,34 @@ import (
 	"os"
 )
 
-const SIN_IMAGE_SIZE int = 300
-
 func main() {
-	// 根据指定大小创建灰度图
-	grayPic := image.NewGray(image.Rect(0, 0, SIN_IMAGE_SIZE, SIN_IMAGE_SIZE))
-	// 遍历每个像素点
-	for i := 0; i < SIN_IMAGE_SIZE; i++ {
-		for j := 0; i < SIN_IMAGE_SIZE; j++ {
+	// 图片大小
+	const size = 300
+	// 根据给定大小创建灰度图
+	pic := image.NewGray(image.Rect(0, 0, size, size))
+	// 遍历每个像素
+	for x := 0; x < size; x++ {
+		for y := 0; y < size; y++ {
 			// 填充为白色
-			grayPic.SetGray(i, j, color.Gray{Y: 255})
+			pic.SetGray(x, y, color.Gray{255})
 		}
 	}
-
 	// 从0到最大像素生成x坐标
-	for i := 0; i < SIN_IMAGE_SIZE; i++ {
-		// 让sin的值的范围在0^2Pi之间
-		s := float64(i*2) * math.Pi / float64(SIN_IMAGE_SIZE)
-		// sin的幅度为一半的像素，向下偏移一半像素并翻转
-		y := float64(SIN_IMAGE_SIZE/2) - math.Sin(s)*float64(SIN_IMAGE_SIZE)/2
-		// 用黑色绘制sin曲线
-		grayPic.SetGray(i, int(y), color.Gray{Y: 0})
+	for x := 0; x < size; x++ {
+		// 让sin的值的范围在0~2Pi之间
+		s := float64(x) * 2 * math.Pi / size
+		// sin的幅度为一半的像素。向下偏移一半像素并翻转
+		y := size/2 - math.Sin(s)*size/2
+		// 用黑色绘制sin轨迹
+		pic.SetGray(x, int(y), color.Gray{0})
 	}
-
 	// 创建文件
-	file, err := os.Create("sin.png")
+	file, err := os.Create("src/main/resources/sin.png")
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	// 使用png格式将数据写入文件
-	// 将image信息写入文件中
-	_ = png.Encode(file, grayPic)
-
+	_ = png.Encode(file, pic) //将image信息写入文件中
 	// 关闭文件
 	_ = file.Close()
 }
