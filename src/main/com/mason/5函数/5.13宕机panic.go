@@ -1,18 +1,21 @@
 package main
 
 import (
+	"fmt"
 	"regexp"
 	"strconv"
 )
 
 func main() {
-	mustCompile("123")
+	defer fmt.Println("Hello World!")
+	mustCompile("^{_+}@![]")
 }
 
 func mustCompile(str string) *regexp.Regexp {
 	reg, err := regexp.Compile(str)
 	if err != nil {
-		panic(`regexp: Compile(` + strconv.Quote(str) + `): ` + err.Error())
+		// 手动触发宕机
+		panic("regexp: Compile(" + strconv.Quote(str) + "): " + err.Error())
 	}
 	return reg
 }
